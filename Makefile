@@ -141,7 +141,7 @@ UPROGS=\
 	$U/_mounttest\
 	$U/_crashtest\
 	$U/_sleep\
-	$U/_pingpang\
+	$U/_pingpong\
 	$U/_primes\
 
 fs.img: mkfs/mkfs README user/xargstest.sh $(UPROGS)

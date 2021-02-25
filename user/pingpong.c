@@ -16,13 +16,13 @@ int main(int argc, char *argv[])
         //printf("child send ping\n");
         write(parient_fds[1], "ping\n", 5);
         read(child_fds[0], buff, sizeof(buff)); // 阻塞，等待父进程写入pang
-        printf("received %s\n", buff);
+        printf("3: received %s", buff);// 写入pong的时候已经加\n，所以这里打印的时候，不用加\n
         exit();
     }else
     {
         // 父进程
         read(parient_fds[0], buff, sizeof(buff));
-        printf("received %s\n", buff);
+        printf("4: received %s", buff);
         write(child_fds[1], "pong\n", 5);
         wait();
         //printf("parent received child exit, then parent exit.\n");
