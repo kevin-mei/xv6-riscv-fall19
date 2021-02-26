@@ -86,7 +86,7 @@ void find(char *path, char *pattern)
         break;
 
       case T_DIR:
-        if (strcmp(de.name, ".") && strcmp(de.name, "..")) // 相等的话返回0，不等返回两个最后一位的差值
+        if (!strcmp(de.name, ".") && !strcmp(de.name, "..")) // 相等的话返回0，不等返回两个最后一位的差值
         {
           find(buf, pattern);
         }
