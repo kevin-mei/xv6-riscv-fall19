@@ -42,7 +42,7 @@ void find(char *path, char* pattern)
     close(fd);
     return;
   }
-char* fileName;
+    char* fileName;
   switch(st.type){
   case T_FILE:
     fileName = fmtname(path);
@@ -66,11 +66,20 @@ char* fileName;
         printf("find: cannot stat %s\n", buf);
         continue;
       }
-      fileName = fmtname(path);
-      if(match(pattern, fileName)){
-        printf("%s\n", fileName);
-      }
-      
+      fileName = fmtname(buf);
+      switch (st.type)
+      {
+      case T_FILE:
+          if (match(pattern, fileName))
+          {
+              printf("%s\n", fileName);
+          }
+          break;
+
+          case T_DIR:
+              find(path, pattern);
+              break;
+          }     
     }
     break;
   }
