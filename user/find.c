@@ -48,8 +48,11 @@ void find(char *path, char *pattern)
   switch (st.type)
   {
   case T_FILE:
-    fileName = fmtname(path);
-    printf("%s\n", fmtname(path));
+    fileName = fmtname(buf);
+    if (match(pattern, fileName))
+    {
+      printf("%s\n", path);
+    }
     break;
 
   case T_DIR:
@@ -78,7 +81,7 @@ void find(char *path, char *pattern)
       case T_FILE:
         if (match(pattern, fileName))
         {
-          printf("%s\n", fileName);
+          printf("%s\n", path);
         }
         break;
 
