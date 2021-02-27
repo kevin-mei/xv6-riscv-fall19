@@ -25,6 +25,7 @@ fmtname(char *path)
   return buf;
 }
 
+// 打印path下文件名包含匹配pattern的文件全路径
 void find(char *path, char *pattern)
 {
   char buf[512], *p;
@@ -48,10 +49,10 @@ void find(char *path, char *pattern)
   switch (st.type)
   {
   case T_FILE:
-    fileName = fmtname(path);
+    fileName = fmtname(path);//判断文件名包含
     if (match(pattern, fileName))
     {
-      printf("%s\n", path);
+      printf("%s\n", path); // 打印的时候是文件全路径
     }
     break;
 
@@ -85,7 +86,7 @@ void find(char *path, char *pattern)
         }
         break;
 
-      case T_DIR:
+      case T_DIR: //递归进入子目录
         if (strcmp(de.name, ".") && strcmp(de.name, "..")) // 相等的话返回0，不等返回两个最后一位的差值
         {
           find(buf, pattern);

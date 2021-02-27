@@ -1,12 +1,14 @@
 #include "kernel/types.h"
 #include "user/user.h"
 
+// createprocess 要做的事情: 保存当前进程的数，当前的进程，只留存自己第一次接收到的数字
+// 然后判断之后接收到的数字，能不能被第一次接受到的数组整除
+// 如果可以，则忽略，不可以，则传递到下一个进程
 void createprocess(int parent_fds[2])
 {
-	// 要做的事情
-	int fixNum = 0; // 保存当前进程的数，当前的进程，只留存自己第一次接收到的数字，然后判断之后接收到的数字，能不能被第一次接受到的数组整除，如果可以，则忽略，不可以，则传递到下一个进程
+	int fixNum = 0; // 只留存自己第一次接收到的数字
 	// 从传入的parent_fds的读端，读取一个数字, 如果本地没有
-	close(parent_fds[1]); // 用不着写端，直接关闭
+	close(parent_fds[1]); // 用不着paren_fds的写端，直接关闭
 	int curNum = 0;
 	if (read(parent_fds[0], &curNum, sizeof(curNum)))
 	{
@@ -15,7 +17,6 @@ void createprocess(int parent_fds[2])
 	}
 	int child_fds[2];
 	pipe(child_fds);
-
 	if (0 != read(parent_fds[0], &curNum, sizeof(curNum)))
 	{
 		int pid = fork();
@@ -23,17 +24,18 @@ void createprocess(int parent_fds[2])
 		{
 			exit();
 		}else if (0 == pid)
-		{
+		{ // 子进程中递归调用createprocess
 			createprocess(child_fds);
 		}
 		else
-		{
-			close(child_fds[0]); // 关闭读端
+		{ // 父进程
+			close(child_fds[0]); // 关闭child_fds读端
 			do{
-				// 父进程，需要将当前进程的curNum传递给子进程
-				if(0 != curNum % fixNum)
+				// 需要将当前进程的curNum传递给子进程
+				if(0 != curNum % fixNum) // 判断读到的curNum能否被当前进程的素数整除
 					write(child_fds[1], &curNum, sizeof(curNum));
-			}while(read(parent_fds[0], &curNum, sizeof(curNum)));				}
+			}while(read(parent_fds[0], &curNum, sizeof(curNum)));
+    }
 	}
 	exit();
 }
